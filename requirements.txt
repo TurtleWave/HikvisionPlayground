@@ -1,1 +1,3 @@
 pyhik
+requests
+opencv-python

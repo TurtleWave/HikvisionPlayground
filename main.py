@@ -1,16 +1,28 @@
-# This is a sample Python script.
+import datetime
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+import pyhik.hikvision
+
+from players import HikVideoPlayer
+from setting import HIK_HOST, HIK_USER, HIK_PASSWORD
+
+message = {"cam_id": {"event_type": {"channel": None}}}
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+def motion_callback(msg):
+    print(datetime.datetime.now())
+    print(msg)
 
 
-# Press the green button in the gutter to run the script.
+def main():
+    camera = pyhik.hikvision.HikCamera(host=f"http://{HIK_HOST}", usr=HIK_USER, pwd=HIK_PASSWORD)
+    camera.add_update_callback(motion_callback, message)
+    camera.start_stream()
+
+    reader = HikVideoPlayer()
+    reader.play()
+
+    print(camera.get_device_info())
+
+
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    main()
